@@ -64,3 +64,16 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Laravel Breeze
+Laravel Breeze là một package chính thức của Laravel, cung cấp hệ thống xác thực đơn giản, bao gồm đăng nhập, đăng ký, và khôi phục mật khẩu.
+composer require laravel/breeze --dev
+php artisan breeze:install
+npm install && npm run dev
+php artisan migrate
+
+##AdminLTE
+composer require jeroennoten/laravel-adminlte
+php artisan vendor:publish --provider="JeroenNoten\LaravelAdminLte\AdminLteServiceProvider"
+
+
