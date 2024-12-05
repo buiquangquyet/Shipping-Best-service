@@ -1,0 +1,91 @@
+services:
+  php-fpm:
+    build:
+      args:
+        user: www
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: shipping-best
+    container_name: shipping-best
+    restart: unless-stopped
+    working_dir: /var/www/
+    privileged: true
+    volumes:
+      - ./../:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/php.ini
+    ports:
+      - "9001:9000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - DB_CORE_HOST=mariadb
+      - DB_MONGO_HOST_CLUSTER_0=mongodb
+      - DB_MONGO_HOST_CLUSTER_1=mongodb
+      - DB_MONGO_HOST_CLUSTER_2=mongodb
+    networks:
+      - my-network
+      - shared-network
+
+  shipping-best-nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    container_name: kv_shipping_best_nginx
+    ports:
+      - 8096:8096
+    volumes:
+      - ./../../../shipping-api:/var/www/shipping-api
+      - ./docker/nginx:/etc/nginx/conf.d/
+    networks:
+      - my-network
+
+  redis:
+    image: 'bitnami/redis:5.0'
+    hostname: redis
+    container_name: kv_shipping_best_redis
+#    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+#      - ALLOW_EMPTY_PASSWORD=yes
+    command: redis-server --requirepass 123456a@
+    ports:
+      - '6383:6379'
+    restart: unless-stopped
+    volumes:
+      - "/var/lib/redis:/data/redis"
+    platform: linux/amd64
+    networks:
+      - my-network
+
+
+  mariadb:
+    image: 'bitnami/mariadb:11.0.3'
+    ports:
+      - "3314:3306"
+    hostname: mariadb
+    container_name: kv_shipping_best_mariadb
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_DATABASE=kvshipping
+      - MARIADB_ROOT_USER=root
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_USER=admin
+      - MARIADB_PASSWORD=123456a@
+    restart: unless-stopped
+    volumes:
+      - "/var/lib/mariadb:/data/mariadb"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+  shared-network:
+    external: true
+
+volumes:
+  redis_data:
+    driver: local
+  mariadb_data:
+    driver: local
+  mongo_data:
+    driver: local
