@@ -38,6 +38,7 @@ services:
       - ./docker/nginx:/etc/nginx/conf.d/
     networks:
       - my-network
+      - shared-network
 
   redis:
     image: 'bitnami/redis:5.0'
@@ -55,6 +56,7 @@ services:
     platform: linux/amd64
     networks:
       - my-network
+      - shared-network
 
 
   mariadb:
@@ -73,6 +75,7 @@ services:
     restart: unless-stopped
     volumes:
       - "/var/lib/mariadb:/data/mariadb"
+      - ./docker/mariadb_data:/var/lib/mysql
     networks:
       - my-network
 
