@@ -6,13 +6,13 @@ services:
         uid: 1000
       context: ./
       dockerfile: Dockerfile
-    image: shipping-best
-    container_name: shipping-best
+    image: devilbox/php-fpm-8.3:latest
+    container_name: shipping_best_fpm
     restart: unless-stopped
     working_dir: /var/www/
     privileged: true
     volumes:
-      - ./../:/var/www
+      - ./../:/var/www/shipping-best-service/
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/php.ini
     ports:
       - "9001:9000"
@@ -30,11 +30,11 @@ services:
   shipping-best-nginx:
     image: nginx:alpine
     restart: unless-stopped
-    container_name: kv_shipping_best_nginx
+    container_name: shipping_best_nginx
     ports:
       - 8096:8096
     volumes:
-      - ./../../../shipping-api:/var/www/shipping-api
+      - ./../.:/var/www/shipping-best-service/
       - ./docker/nginx:/etc/nginx/conf.d/
     networks:
       - my-network
@@ -65,7 +65,7 @@ services:
     container_name: kv_shipping_best_mariadb
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_DATABASE=kvshipping
+      - MARIADB_DATABASE=shipping-best
       - MARIADB_ROOT_USER=root
       - MARIADB_ROOT_PASSWORD=root
       - MARIADB_USER=admin
