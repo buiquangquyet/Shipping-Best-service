@@ -6,7 +6,7 @@ services:
         uid: 1000
       context: ./
       dockerfile: Dockerfile
-    image: devilbox/php-fpm-8.3:latest
+    image: laradock/php-fpm:latest-8.2
     container_name: shipping_best_fpm
     restart: unless-stopped
     working_dir: /var/www/
