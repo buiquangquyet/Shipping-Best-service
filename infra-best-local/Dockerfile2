@@ -1,0 +1,46 @@
+FROM devilbox/php-fpm-8.3:latest
+
+ENV TZ=Asia/Ho_Chi_Minh
+
+RUN apt-get update && apt-get install -y \
+    zip \
+    unzip \
+    git \
+    libpq-dev \
+    && docker-php-ext-install pdo_mysql \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && rm -rf /var/lib/apt/lists/
+
+RUN mkdir -p /var/www/ /var/www/bin /var/www/shipping-best-service
+
+WORKDIR /var/www/shipping-best-service/
+
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY . .
+
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN apt update -y && apt install -y vim \
+    htop \
+    net-tools \
+    nmap
+COPY ./infra-best-local/docker/php/local.ini /usr/local/etc/php/conf.d/php.ini
+
+RUN composer install --no-dev --optimize-autoloader
+
+RUN mkdir -p storage \
+    mkdir -p storage/framework/sessions \
+    mkdir -p storage/framework/views \
+    mkdir -p storage/framework/cache \
+    mkdir -p storage/logs \
+#    touch storage/logs/laravel.log \
+    && chown -R www-data:www-data /var/www/shipping-best-service \
+    && chmod -R 777 storage \
+    && chmod -R 777 storage/logs
+
+EXPOSE 9000
+CMD ["php-fpm"]
+
+

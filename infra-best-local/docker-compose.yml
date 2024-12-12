@@ -4,16 +4,16 @@ services:
       args:
         user: www
         uid: 1000
-      context: ./
-      dockerfile: Dockerfile
-    image: devilbox/php-fpm-8.3:latest
+      context: ../
+      dockerfile: ./infra-best-local/Dockerfile2
+#    image: devilbox/php-fpm-8.3:latest
     container_name: shipping_best_fpm
     restart: unless-stopped
-    working_dir: /var/www/
+#    working_dir: /var/www/
     privileged: true
-    volumes:
-      - ./../:/var/www/shipping-best-service/
-      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/php.ini
+#    volumes:
+#      - ./../:/var/www/shipping-best-service/
+#      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/php.ini
     ports:
       - "9001:9000"
     extra_hosts:
