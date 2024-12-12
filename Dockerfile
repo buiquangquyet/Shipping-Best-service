@@ -1,5 +1,5 @@
 #FROM registry.citigo.net/kship/php-base:8.3
-FROM registry.citigo.net/kship/php-base:7.3
+FROM registry.citigo.net/kship/php-base:8.3
 
 WORKDIR /var/www/html
 
