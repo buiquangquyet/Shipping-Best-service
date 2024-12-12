@@ -11,9 +11,11 @@ services:
     restart: unless-stopped
 #    working_dir: /var/www/
     privileged: true
-#    volumes:
-#      - ./../:/var/www/shipping-best-service/
-#      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/php.ini
+    volumes:
+      - /var/www/shipping-best-service/vendor
+      - /var/www/shipping-best-service/storage
+      - /var/www/shipping-best-service/bootstrap/cache
+      - ./../:/var/www/shipping-best-service/
     ports:
       - "9001:9000"
     extra_hosts:
