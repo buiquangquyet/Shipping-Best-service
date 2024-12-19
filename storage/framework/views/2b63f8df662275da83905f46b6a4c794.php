@@ -256,3 +256,4 @@
         </nav>
     </div> <!--end::Sidebar Wrapper-->
 </aside> <!--end::Sidebar--> <!--begin::App Main-->
+<?php /**PATH /var/www/shipping-best-service/resources/views/layouts/adminlte4/sidebar/sidebar.blade.php ENDPATH**/ ?>

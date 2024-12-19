@@ -1,0 +1,8 @@
+.git/
+.gitignore
+Dockerfile
+Dockerfile.job
+/.idea
+/.vscode
+/.vagrant
+composer.lock
