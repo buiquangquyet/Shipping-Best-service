@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mapping_wards', function (Blueprint $table) {
+        Schema::create('mapping_post_office', function (Blueprint $table) {
+            $table->id();
+            $table->integer('post_office_id');
             $table->integer('source_ward_id');
             $table->integer('destination_ward_id');
             $table->timestamps();
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mapping_wards');
+        Schema::dropIfExists('mapping_post_office');
     }
 };
