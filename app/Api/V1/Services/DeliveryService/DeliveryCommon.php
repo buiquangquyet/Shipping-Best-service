@@ -9,6 +9,14 @@ class DeliveryCommon
         'login' => [
             'uri' => '/VietNamV3/v3/api/process/sears/User/Login',
             'method' => 'POST'
+        ],
+        'getOrder' => [
+            'uri' => '/VietNamV3/v3/api/process/sears/Order/Query',
+            'method' => 'POST'
+        ],
+        'cancelOrder' => [
+            'uri' => '/VietNamV3/v3/api/process/sears/Order/Cancel',
+            'method' => 'POST'
         ]
     ];
 }

@@ -32,7 +32,7 @@ class LoginRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $response = response()->json([
-            'Result' => 1,
+            'Result' => 2,
             'Message' => 'Username or password is required',
             'error' => true,
         ], 422);

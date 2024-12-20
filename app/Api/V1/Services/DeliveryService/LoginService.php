@@ -6,11 +6,9 @@ use App\Api\V1\Base\BaseService;
 
 class LoginService extends BaseService
 {
-    protected $baseUrl = DeliveryCommon::MASTER_URL;
-    protected $fileCommon = 'DeliveryCommon';
-
     public function __construct()
     {
+        $this->baseUrl = env('BEST_API_URL',  DeliveryCommon::MASTER_URL);
         $this->fileCommon = 'DeliveryCommon';
         $this->servicePath = 'app\Api\V1\Services\DeliveryService';
         parent::__construct();
@@ -23,7 +21,7 @@ class LoginService extends BaseService
     {
         $uri = $this->getUri('login');
         $method = $this->getMethod('login');
-
-        return $this->doRequest($method, $uri, $data);
+        $options['json'] = $data;
+        return $this->doRequest($method, $uri, $options);
     }
 }

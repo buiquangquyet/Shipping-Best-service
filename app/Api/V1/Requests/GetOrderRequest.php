@@ -2,7 +2,9 @@
 
 namespace App\Api\V1\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class GetOrderRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class GetOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,31 @@ class GetOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'LangType' => 'required|in:zh-CN,en-US',
+            'Codes' => 'required|array'
         ];
+    }
+
+    /**
+     * Custom messages for validation errors.
+     */
+    public function messages(): array
+    {
+        return [
+            'LangType.required' => 'The LangType field is required.',
+            'LangType.in' => 'LangType must be either zh-CN or en-US.',
+            'Codes.required' => 'The Codes field is required.',
+            'Codes.array' => 'The Codes field must be an array.',
+        ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = response()->json([
+            'Result' => 2,
+            'Message' => $validator->errors()->first(),
+            'error' => true,
+        ], 422);
+        throw new HttpResponseException($response);
     }
 }
