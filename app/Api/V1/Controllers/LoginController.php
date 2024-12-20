@@ -13,14 +13,21 @@ class LoginController extends Controller
 {
     use ApiTrait;
     public function __construct(private readonly LoginService $loginService)
-    {
+    {}
 
-    }
-
+    /**
+     * @throws \Exception
+     */
     public function login(LoginRequest $request): JsonResponse
     {
-        $data = $request->all();
-        $this->loginService->login($data);
-        return $this->responseSuccess([]);
+        try {
+            $data = $request->validated();
+            $response = $this->loginService->login($data);
+
+            return $this->responseSuccess($response, true);
+        }catch (\Exception $exception) {
+
+            return $this->responseError($exception->getMessage());
+        }
     }
 }
