@@ -1,94 +1,96 @@
 services:
-  php-fpm:
-    build:
-      args:
-        user: www
-        uid: 1000
-      context: ./
-      dockerfile: Dockerfile
-    image: laradock/php-fpm:latest-8.2
-    container_name: shipping_best_fpm
-    restart: unless-stopped
-    working_dir: /var/www/
-    privileged: true
-    volumes:
-      - ./../:/var/www/shipping-best-service/
-      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/php.ini
-    ports:
-      - "9001:9000"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    environment:
-      - DB_CORE_HOST=mariadb
-      - DB_MONGO_HOST_CLUSTER_0=mongodb
-      - DB_MONGO_HOST_CLUSTER_1=mongodb
-      - DB_MONGO_HOST_CLUSTER_2=mongodb
-    networks:
-      - my-network
-      - shared-network
+    php-fpm:
+        build:
+            args:
+                user: www
+                uid: 1000
+            context: ../
+            dockerfile: ./infra-best-local/Dockerfile2
+        #    image: devilbox/php-fpm-8.3:latest
+        container_name: shipping_best_fpm
+        restart: unless-stopped
+        #    working_dir: /var/www/
+        privileged: true
+        volumes:
+            - /var/www/shipping-best-service/vendor
+            - /var/www/shipping-best-service/storage
+            - /var/www/shipping-best-service/bootstrap/cache
+            - ./../:/var/www/shipping-best-service/
+        ports:
+            - "9001:9000"
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        environment:
+            - DB_CORE_HOST=mariadb
+            - DB_MONGO_HOST_CLUSTER_0=mongodb
+            - DB_MONGO_HOST_CLUSTER_1=mongodb
+            - DB_MONGO_HOST_CLUSTER_2=mongodb
+        networks:
+            - my-network
+            - shared-network
 
-  shipping-best-nginx:
-    image: nginx:alpine
-    restart: unless-stopped
-    container_name: shipping_best_nginx
-    ports:
-      - 8096:8096
-    volumes:
-      - ./../.:/var/www/shipping-best-service/
-      - ./docker/nginx:/etc/nginx/conf.d/
-    networks:
-      - my-network
-      - shared-network
+    shipping-best-nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        container_name: shipping_best_nginx
+        ports:
+            - 8096:8096
+        volumes:
+            - ./../.:/var/www/shipping-best-service/
+            - ./docker/nginx:/etc/nginx/conf.d/
+        networks:
+            - my-network
+            - shared-network
 
-  redis:
-    image: 'bitnami/redis:5.0'
-    hostname: redis
-    container_name: kv_shipping_best_redis
-#    environment:
-      # ALLOW_EMPTY_PASSWORD is recommended only for development.
-#      - ALLOW_EMPTY_PASSWORD=yes
-    command: redis-server --requirepass 123456a@
-    ports:
-      - '6383:6379'
-    restart: unless-stopped
-    volumes:
-      - "/var/lib/redis:/data/redis"
-    platform: linux/amd64
-    networks:
-      - my-network
-      - shared-network
+    redis:
+        image: 'bitnami/redis:5.0'
+        hostname: redis
+        container_name: kv_shipping_best_redis
+          #    environment:
+        # ALLOW_EMPTY_PASSWORD is recommended only for development.
+        #      - ALLOW_EMPTY_PASSWORD=yes
+        command: redis-server --requirepass 123456a@
+        ports:
+            - '6383:6379'
+        restart: unless-stopped
+        volumes:
+            - "/var/lib/redis:/data/redis"
+        platform: linux/amd64
+        networks:
+            - my-network
+            - shared-network
 
 
-  mariadb:
-    image: 'bitnami/mariadb:11.0.3'
-    ports:
-      - "3314:3306"
-    hostname: mariadb
-    container_name: kv_shipping_best_mariadb
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_DATABASE=shipping-best
-      - MARIADB_ROOT_USER=root
-      - MARIADB_ROOT_PASSWORD=root
-      - MARIADB_USER=admin
-      - MARIADB_PASSWORD=123456a@
-    restart: unless-stopped
-    volumes:
-      - "/var/lib/mariadb:/data/mariadb"
-      - ./docker/mariadb_data:/var/lib/mysql
-    networks:
-      - my-network
+    mariadb:
+        image: 'bitnami/mariadb:11.0.3'
+        ports:
+            - "3314:3306"
+        hostname: mariadb
+        container_name: kv_shipping_best_mariadb
+        environment:
+            - ALLOW_EMPTY_PASSWORD=yes
+            - MARIADB_DATABASE=shipping-best
+            - MARIADB_ROOT_USER=root
+            - MARIADB_ROOT_PASSWORD=root
+            - MARIADB_USER=admin
+            - MARIADB_PASSWORD=123456a@
+        restart: unless-stopped
+        volumes:
+            - "/var/lib/mariadb:/data/mariadb"
+            - ./docker/mariadb_data:/var/lib/mysql
+        networks:
+            - my-network
 
 networks:
-  my-network:
-    driver: bridge
-  shared-network:
-    external: true
+    my-network:
+        driver: bridge
+    shared-network:
+        external: true
 
 volumes:
-  redis_data:
-    driver: local
-  mariadb_data:
-    driver: local
-  mongo_data:
-    driver: local
+    redis_data:
+        driver: local
+    mariadb_data:
+        driver: local
+    mongo_data:
+        driver: local

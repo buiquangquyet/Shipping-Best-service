@@ -1,15 +1,15 @@
 <?php
 
-use App\Api\V1\Controllers\TestController;
+use App\Api\V1\Controllers\OrderController;
+use App\Api\V1\Controllers\LoginController;
+use App\Api\V1\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
 
-//Route::prefix('/api/v1')->group(function () {
-//    echo 123;
-//    Route::get('test', function (){
-//        return response()->json(['message' => 'Welcome to API v1']);
-//    });
-//});
-//Route::get('/greeting', function () {
-//    return 'Hello World';
-//});
+Route::prefix('v1')->group(function () {
+    Route::post('/User/Login', [LoginController::class, 'login']);
+    Route::post('/Order/Add', [OrderController::class, 'createOrder']);
+    Route::post('/Order/Query', [OrderController::class, 'getOrder']);
+    Route::post('/Order/Cancel', [OrderController::class, 'cancelOrder']);
+    Route::post('/webhook', [WebhookController::class, 'webhook']);
+});
 
