@@ -2,7 +2,9 @@
 
 namespace App\Api\V1\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LoginRequest extends FormRequest
 {
@@ -22,7 +24,18 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'Username' => 'required',
+            'Password' => 'required',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = response()->json([
+            'Result' => 2,
+            'Message' => 'Username or password is required',
+            'error' => true,
+        ], 422);
+        throw new HttpResponseException($response);
     }
 }

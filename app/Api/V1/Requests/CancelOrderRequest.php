@@ -2,7 +2,9 @@
 
 namespace App\Api\V1\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CancelOrderRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class CancelOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,27 @@ class CancelOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'Code' => 'required'
         ];
+    }
+
+    /**
+     * Custom messages for validation errors.
+     */
+    public function messages(): array
+    {
+        return [
+            'Code.required' => 'Code field is required.',
+        ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = response()->json([
+            'Result' => 2,
+            'Message' => $validator->errors()->first(),
+            'error' => true,
+        ], 422);
+        throw new HttpResponseException($response);
     }
 }
