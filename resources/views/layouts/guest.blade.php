@@ -13,6 +13,7 @@
 
         <!-- Scripts -->
         {{--@vite(['resources/css/app.css', 'resources/js/app.js'])--}}
+
         <link href="/build/assets/app-BsEz9WA7.css" rel="stylesheet">
     </head>
     <body class="font-sans text-gray-900 antialiased">
