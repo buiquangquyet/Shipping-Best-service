@@ -1,4 +1,4 @@
-FROM registry.citigo.net/kship/php-base:8.3
+FROM registry.citigo.net/kship/php-base:8.3-platform-v1
 
 WORKDIR /var/www/html
 
