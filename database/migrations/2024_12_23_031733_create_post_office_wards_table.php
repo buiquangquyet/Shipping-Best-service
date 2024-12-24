@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('post_office_wards', function (Blueprint $table) {
-            $table->id();
-            $table->id('type');
+            $table->increments('id');
+            $table->integer('type');
             $table->integer('post_office_id');
             $table->integer('source_ward_id');
             $table->integer('destination_ward_id');
